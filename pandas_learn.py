@@ -36,6 +36,78 @@ print(data)
 print(df)
 
 data = np.random.rand(2,3)
-df = pd.DataFrame(data,index=[1,2])
+df = pd.DataFrame(data,columns=["c1","c2","c3"],index=["r1","r2"])
 
 print(df)
+
+data = np.ones(6,dtype=[("C1",'i8'),("C2","f8")])
+
+df = pd.DataFrame(data,index = ["r"+str(i) for i in range(6)])
+
+print(df)
+####series 取值
+data = pd.Series(np.linspace(0,1,5),index=["a","b","c","d","f"])
+data1 = pd.Series(np.linspace(0,1,5))
+print(data.loc["a":"c"])
+print(data["a":"c"])
+print("data1:")
+print(data1[1:3]) #隐式
+print(data1.loc[1:3])
+print(data1.iloc[1:3])  #隐式
+
+####dataFrame 取值
+np.random.seed(9)
+data = np.random.randint(1,10,(4,5))
+df = pd.DataFrame(data,columns=["c"+str(i) for i in range(1,6)],index=["r"+str(i) for i in range(1,5)])
+
+print(df)
+
+print(df["c1"])
+
+# df["sum"] =df["c5"] * 2
+    #
+df["sum"] = pd.Series([v.sum() for v in df.values],index=df.index)
+print("add sum")
+print(df)
+
+print(df.values[0])
+
+print(df["r1":"r1"])
+
+print(df.loc["r1":"r2","c1":"c2"])
+
+print(df.loc[df.c2>6,"c1":])
+
+print(df.loc[:,df.values[0]>7])
+
+#####通用函数
+s1 = pd.Series(np.linspace(0,10,5,dtype='int'),index=["a","b","c","d","f"])
+s2 = pd.Series(np.linspace(0,10,3,dtype='int'),index=list("adf"))
+print(s1,"\n",s2)
+print(s1+s2)
+print(s1.add(s2,fill_value=0))
+
+
+s1 = pd.Series(np.linspace(5,10,5,dtype='int'),index=list("abcde"))
+s2 = pd.Series(np.linspace(0,5,5,dtype='int'),index=list("ebdca"))
+
+df = pd.DataFrame({"s1":s1,"s2":s2})
+print(df)
+
+print(df-df.iloc[0])
+
+print(df.subtract(df["s1"],axis=0))
+
+#缺失值
+s1 = np.array([33,np.nan,44,np.nan,33])
+s2 = pd.Series([33,np.nan,44,np.nan,33],index=list("abcde"))
+
+print("s1:",s1)
+print("s1 sum:",s1.sum())
+print("s2 sum:",s2.sum())
+print("s1 nansum:",np.nansum(s1))
+
+print("s2 is null:",s2.isnull())
+
+print("s2 is not null:",s2[s2.notnull()])
+print("s2 dropna:",s2.dropna())
