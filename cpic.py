@@ -1,7 +1,7 @@
 import tushare as ts
 
 import tushare.stock.indictor as indx
-import trendline as trline
+
 
 import pandas as pd
 import numpy as np
