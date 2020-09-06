@@ -111,3 +111,22 @@ print("s2 is null:",s2.isnull())
 
 print("s2 is not null:",s2[s2.notnull()])
 print("s2 dropna:",s2.dropna())
+
+print("s2 fillna\n",s2.fillna(999),"\n",s2.ffill(),"\n",s2.bfill())
+
+df = pd.DataFrame(np.random.randint(1,10,(5,5)),index=list("abcde"))
+
+df.iloc[0:1,1:2],df.iloc[2:3,2:3],df.iloc[3:4,1:2]=np.nan,np.nan,np.nan
+# df.iloc[0:3,1:2]=np.nan
+print(df)
+
+print(df.dropna())
+
+print(df.dropna(axis=1,how='all'))
+
+print(df.dropna(axis="columns",thresh=4))
+
+print(df.fillna(axis=0,method="ffill"))
+
+
+print(df.fillna(value=999,axis=0))
