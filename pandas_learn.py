@@ -130,3 +130,4 @@ print(df.fillna(axis=0,method="ffill"))
 
 
 print(df.fillna(value=999,axis=0))
+
