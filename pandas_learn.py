@@ -158,3 +158,16 @@ data = {("year1", 2020):3, ("year1", 2019): 4, ("year2", 2020): 5, ("year2", 201
 "year3", 2020):7}
 data = pd.Series(data)
 print(data.unstack())
+index = pd.MultiIndex.from_product([[2019,2020],[1,2,3]],names=['year','month'])
+column = pd.MultiIndex.from_product([['David','Alex'],['Book','Music']],names=['name','love'])
+
+data = np.random.randint(1,10,(6,4))
+
+df = pd.DataFrame(data,index=index,columns=column)
+print(df)
+print(df["David","Book"])
+
+idx = pd.IndexSlice
+print(df.loc[idx[:,(1,2)],idx[('David'),("Book",'Music')]])
+print(df.sort_index(ascending=False))
+print(df.sort_values)
