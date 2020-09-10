@@ -82,6 +82,33 @@ def macd(data, quick_n=12, slow_n=26, dem_n=9, val_name="close"):
     return MACD, DIFF, DEA
     # return data
 
+def profit(data,n=1,val_name="close",debug=False):
+    '''
+        计算T+n天的收益率
+    '''
+    data = data.sort_values(ascending=True, by=["trade_date"], inplace=False) #原数据的index是按最新日期index=0
+    data = data.reset_index()
+    PROFIT_N = []
+    profit_rate = 0
+    for index, row in data.iterrows():
+        val = row[val_name]
+        if index == 0:
+            pass
+        else:
+            profit_rate = (row[val_name] - past_val) / past_val
+
+        if debug:
+            PROFIT_N.append(row["trade_date"] + ":" + str(round(profit_rate,4)))
+        else:
+            PROFIT_N.append(round(profit_rate,4))
+
+
+        past_val = val
+
+    PROFIT_N.append(0) #最后一天
+    return PROFIT_N
+
+
 if __name__=='__main__':
     token = '3be8423f505c5683743fcfc7ef9083a222e965161d3f1832f10fa9cc'
     ts.set_token(token)
@@ -98,6 +125,8 @@ if __name__=='__main__':
     # print(data)
     # print(ema(data,n=20))
     # data = macd(data)
-    OSC, DIFF, DEM = macd(data)
-    print(OSC)
+    # OSC, DIFF, DEM = macd(data)
+    # print(OSC)
     # print(data[["trade_date","diff"]])
+    profits = profit(data,debug=True)
+    print(profits)
