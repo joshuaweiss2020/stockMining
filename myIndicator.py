@@ -1,3 +1,5 @@
+from ctypes import c_longdouble
+
 import tushare as ts
 import pandas as pd
 import numpy as np
@@ -82,6 +84,71 @@ def macd(data, quick_n=12, slow_n=26, dem_n=9, val_name="close"):
     return MACD, DIFF, DEA
     # return data
 
+def kdj(data):
+    '''
+        随机指标KDJ
+        Parameters
+        ------
+          data:pandas.DataFrame
+                通过 get_h_data 取得的股票数据
+        return
+        -------
+          K:numpy.ndarray<numpy.float64>
+              K线
+          D:numpy.ndarray<numpy.float64>
+              D线
+          J:numpy.ndarray<numpy.float64>
+              J线
+    '''
+
+    K, D, J = [], [], []
+    last_k, last_d = None, None
+    for index, row in data.iterrows():
+        if last_k is None or last_d is None:
+            last_k = 50
+            last_d = 50
+
+        c, l, h = row["close"], row["low"], row["high"]
+
+        rsv = (c - l) / (h - l) * 100
+
+        k = (2 / 3) * last_k + (1 / 3) * rsv
+        d = (2 / 3) * last_d + (1 / 3) * k
+        j = 3 * k - 2 * d
+
+        K.append(k)
+        D.append(d)
+        J.append(j)
+
+        last_k, last_d = k, d
+
+    return np.asarray(K), np.asarray(D), np.asarray(J)
+
+def LV(data,n):  #n天最小值
+    return pd.Series.rolling(data,n).min()
+
+def HV(data,n):  #n天最大值
+    return pd.Series.rolling(data,n).max()
+
+def sortA(data):
+    data = data.sort_values(ascending=True, by=["trade_date"], inplace=False) #原数据的index是按最新日期index=0
+    data = data.reset_index()
+    return data
+
+def KDJ(data, N, M1, M2):
+    C = data['close']
+    H = data['high']
+    L = data['low']
+    RSV = (C - LV(L, N)) / (HV(H, N) - LV(L, N)) * 100
+    K = SMA(RSV, M1, 1)
+    D = SMA(K, M2, 1)
+    J = 3 * K - 2 * D
+    DICT = {'KDJ_K': K, 'KDJ_D': D, 'KDJ_J': J}
+    VAR = pd.DataFrame(DICT)
+    return VAR
+
+
+
 def profit(data,n=1,val_name="close",debug=False):
     '''
         计算T+n天的收益率
@@ -114,7 +181,7 @@ if __name__=='__main__':
     ts.set_token(token)
     pro = ts.pro_api()
     data = pro.daily(ts_code="601601.SH", start_date='20200501', end_date='20200931')
-
+    data = sortA(data)
     # data = data.sort_values(ascending=True,by=["trade_date"],inplace=False)
     data = data[["ts_code", "trade_date", "close"]]
     # data = data.head(20)
@@ -128,5 +195,8 @@ if __name__=='__main__':
     # OSC, DIFF, DEM = macd(data)
     # print(OSC)
     # print(data[["trade_date","diff"]])
-    profits = profit(data,debug=True)
-    print(profits)
+    # profits = profit(data,debug=True)
+    # print(profits)
+    print(data["close"].tail(20))
+    lv = HV(data["close"],10)
+    print(lv)
