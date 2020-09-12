@@ -54,6 +54,6 @@ print(data_r)
 print(data_r1)
 print(data_r2)
 data = pd.DataFrame(data)
-print(pd.Series.rolling(data,3).max())
+print(pd.Series.rolling(data,3))
 
 # print(help(pd.Series.rolling))
