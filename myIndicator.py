@@ -135,7 +135,20 @@ def sortA(data):
     data = data.reset_index()
     return data
 
-def KDJ(data, N, M1, M2):
+def SMA(DF, N, M): #n日移动平均线 M为权重
+    DF = DF.fillna(0)
+    z = len(DF)
+    var = np.zeros(z)
+    var[0] = DF[0]
+    for i in range(1, z):
+        var[i] = (DF[i] * M + var[i - 1] * (N - M)) / N
+    for i in range(z):
+        DF[i] = var[i]
+    return DF
+
+
+def KDJ(data, N, M1=3, M2=3):
+   # 随机指标KDJ
     C = data['close']
     H = data['high']
     L = data['low']
@@ -145,6 +158,7 @@ def KDJ(data, N, M1, M2):
     J = 3 * K - 2 * D
     DICT = {'KDJ_K': K, 'KDJ_D': D, 'KDJ_J': J}
     VAR = pd.DataFrame(DICT)
+    VAR["trade_date"] = data["trade_date"]
     return VAR
 
 
@@ -175,6 +189,9 @@ def profit(data,n=1,val_name="close",debug=False):
     PROFIT_N.append(0) #最后一天
     return PROFIT_N
 
+def ROI(data,n): #计算第n日相对于当前的受益率
+    data.set_index("trade_date",inplace=True)
+    return data.shift(-n)["close"]/data["close"]-1
 
 if __name__=='__main__':
     token = '3be8423f505c5683743fcfc7ef9083a222e965161d3f1832f10fa9cc'
@@ -183,7 +200,7 @@ if __name__=='__main__':
     data = pro.daily(ts_code="601601.SH", start_date='20200501', end_date='20200931')
     data = sortA(data)
     # data = data.sort_values(ascending=True,by=["trade_date"],inplace=False)
-    data = data[["ts_code", "trade_date", "close"]]
+    # data = data[["ts_code", "trade_date", "close"]]
     # data = data.head(20)
     # data["new_idx"] = range(12)
     # data = data.reset_index()
@@ -197,6 +214,15 @@ if __name__=='__main__':
     # print(data[["trade_date","diff"]])
     # profits = profit(data,debug=True)
     # print(profits)
-    print(data["close"].tail(20))
-    lv = HV(data["close"],10)
-    print(lv)
+    # print(data["close"].tail(20))
+    # hv = HV(data["close"],10)
+    # print(lv)
+    # kdj = KDJ(data,9)
+    # print(kdj)
+    # data.set_index(pd.datetime(data["trade_date"]),inplace=True)
+    # data.drop("index")
+  # print(data.trade_date)
+    roi = ROI(data,1)
+    print(roi)
+  #   data.set_index("trade_date",inplace=True)
+  #   print(data.shift(1)["close"],data["close"])
