@@ -135,6 +135,17 @@ def sortA(data):
     data = data.reset_index()
     return data
 
+def SMA(DF, N, M):  #N日的移动平均，M为权重
+    DF = DF.fillna(0)
+    z = len(DF)
+    var = np.zeros(z)
+    var[0] = DF[0]
+    for i in range(1, z):
+        var[i] = (DF[i] * M + var[i - 1] * (N - M)) / N
+    for i in range(z):
+        DF[i] = var[i]
+    return DF
+
 def KDJ(data, N, M1, M2):
     C = data['close']
     H = data['high']

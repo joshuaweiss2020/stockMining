@@ -33,7 +33,7 @@ def cci(df, n=14):
 # print(data)
 # print(indx.kdj(data))
 # #l=indx.rsi(data)
-# a,b,c = indx.macd(data)
+a,b,c = indx.macd(data)
 # print("MACD:","OSC:",a," DIFF:",b,"DEM:",c)
 #
 # print(cci(data))
