@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
-
+import pandas as pd
 a= np.array([1,3.43,4,5],dtype='int')
 
 print(a)
@@ -80,3 +80,8 @@ print(np.any(k<0))
 print(np.all(k>0))
 
 print(k[(k>50) & (k<80)])
+
+data = pd.DataFrame(np.random.randint(1,10,(3,3)),index=range(0,3))
+data1 = pd.DataFrame([data[0],data[1]],index=range(4,6))
+print(data)
+print(data1)
