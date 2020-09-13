@@ -1,6 +1,8 @@
 import pandas as pd
 import numpy as np
 import seaborn as sns
+help(sns)
+
 planets = sns.load_dataset('planets')
 print(planets.shape)
 print(planets.dropna().describe())

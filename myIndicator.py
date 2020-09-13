@@ -73,8 +73,8 @@ def MACD(data, quick_n=12, slow_n=26, dem_n=9, val_name="close"):
           DEA:numpy.ndarray<numpy.float64>
               讯号线
     '''
-    data = data.sort_values(ascending=True, by=["trade_date"], inplace=False) #原数据的index是按最新日期index=0
-    data = data.reset_index()
+    # data = data.sort_values(ascending=True, by=["trade_date"], inplace=False) #原数据的index是按最新日期index=0
+    # data = data.reset_index()
     ema_quick = np.asarray(ema(data, quick_n, val_name))
     ema_slow = np.asarray(ema(data, slow_n, val_name))
     DIFF = ema_quick - ema_slow
@@ -205,6 +205,9 @@ def ROI(data,n=1): #计算第n日相对于当前的受益率
     data["ROI"] = ROI
     return data
 
+
+
+
 if __name__=='__main__':
     token = '3be8423f505c5683743fcfc7ef9083a222e965161d3f1832f10fa9cc'
     ts.set_token(token)
@@ -269,8 +272,9 @@ if __name__=='__main__':
     data = ROI(data)
     data = CCI(data,14)
     data = RSI(data,6,12,24)
-    data = KDJ(data,6,12,24)
+    data = KDJ(data,9,12,24)
     data = MACD(data)
+
 
     # print(cci[["trade_date","cci"]].tail(14))
     # print(rsi[["trade_date","RSI"]].tail(14))
