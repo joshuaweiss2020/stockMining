@@ -209,7 +209,9 @@ if __name__=='__main__':
     token = '3be8423f505c5683743fcfc7ef9083a222e965161d3f1832f10fa9cc'
     ts.set_token(token)
     pro = ts.pro_api()
-    data = pro.daily(ts_code="601601.SH", start_date='20200125', end_date='20200931')
+    # data0 = pro.daily(ts_code="601601.SH", start_date='20010101', end_date='20200931')
+    # data0.to_json("601601_all.json")
+    data = pd.read_json("601601_all.json")
     data = sortA(data)
     # data00 = data.tail(1)
     # print(data00)
