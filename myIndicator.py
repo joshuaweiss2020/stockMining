@@ -125,7 +125,7 @@ def SMA(DF, N, M): #n日移动平均线 M为权重
     return DF
 
 
-def KDJ(data, N, M1=3, M2=3):
+def KDJ(data, N=9, M1=3, M2=3):
    # 随机指标KDJ
     C = data['close']
     H = data['high']
@@ -212,8 +212,8 @@ if __name__=='__main__':
     token = '3be8423f505c5683743fcfc7ef9083a222e965161d3f1832f10fa9cc'
     ts.set_token(token)
     pro = ts.pro_api()
-    # data0 = pro.daily(ts_code="601601.SH", start_date='20010101', end_date='20200931')
-    # data0.to_json("601601_all.json")
+    data0 = pro.daily(ts_code="601601.SH", start_date='20010101', end_date='20200931')
+    data0.to_json("601601_all.json")
     data = pd.read_json("601601_all.json")
     data = sortA(data)
     # data00 = data.tail(1)
@@ -272,7 +272,7 @@ if __name__=='__main__':
     data = ROI(data)
     data = CCI(data,14)
     data = RSI(data,6,12,24)
-    data = KDJ(data,9,12,24)
+    data = KDJ(data,9,3,3)
     data = MACD(data)
 
 
@@ -287,5 +287,7 @@ if __name__=='__main__':
     # data["K"],data["D"],data["J"] = kdj["K"] ,kdj["D"],kdj["J"]
     # data["MACD"] = macd["MACD"]
     # data["ROI"] = roi["ROI"]
-    print(data[["trade_date","MACD","K","D","J","RSI","CCI","ROI"]].tail(30))
+    # print(data[["trade_date","MACD","K","D","J","RSI","CCI","ROI"]].tail(30))
+    print(data[["trade_date","K","D","J"]].tail(30))
+
 
